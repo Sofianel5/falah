@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'j)38%o0xk8w#85y2sea__22a62i*p@81dlb%qu!qlfn(+%@+ub'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['falah.world', 'localhost', '.falah.world', '159.89.41.248']
 
 
 # Application definition
@@ -89,8 +89,12 @@ WSGI_APPLICATION = 'falah.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'falah',
+	'USER': 'root',
+        'PASSWORD': ',{S]#3AGCtebtrjh=L4z5g&=Ar%+z(',
+        'HOST': 'db-postgresql-nyc1-41857-do-user-7128584-0.db.ondigitalocean.com',
+        'PORT': '25060',
     }
 }
 
@@ -138,7 +142,7 @@ MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = 'me'
 
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'main/static'), ]
 
