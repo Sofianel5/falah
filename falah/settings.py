@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'djoser',
     'imagekit',
     "djcelery_email",
+    "storages",
 ]
 
 MIDDLEWARE = [
