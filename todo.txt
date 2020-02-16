@@ -1,0 +1,31 @@
+user reccomendations 
+searh for event in navbar
+email list 
+    suggestions 
+    reminders (come to event, renew event)
+automatically make event not active after emailed person and they didnt renew it 
+likes on events 
+tags link 
+footer 
+add titles
+redesign program browse/detail
+    dates on browse 
+    less like eventbrite
+add favicon
+default.jpg
+minimize all outside libraries and download for faster deploy 
+remove session in create (button/javascript)
+in reload of create/edit page, should autofill venue and secondary subject
+more location functionality (areas, not city), images for venues/cities
+text for emptiness ie (no programs in this area. try somewhere else)
+contact info for creator of event shown
+venue descriptions, link, detail page
+text... if text too long to be displayed 
+forgot password
+suggested programs based on interest and location
+logout in app
+error flags in app to send data to server when there is an error/crash
+whitelist our domain for loggining into accounts@falah.world in gsuite 
+add a third color for color scheme
+start using sass 
+translation

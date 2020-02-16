@@ -1,0 +1,70 @@
+{% extends "main/layout.html" %}
+{% load static %}
+{% block title %}Falah | Sign up{% endblock %}
+{% block main %}
+<div class="full-width column-start-flex" style="margin-top: 4vh;">
+  <form action="/signup/?next={{ next }}" id="form" method="POST">
+        {% csrf_token %}
+      {% for hidden_field in form.hidden_fields %}
+      <span class="errors">
+        {{ hidden_field.errors.as_text }}
+      </span>
+        {{ hidden_field }}
+      {% endfor %}
+    <div class="full-width center-row-flex">
+      <img data-aos="zoom-in" data-aos-duration="1000" class="square-logo" src="{% static 'main/square-logo.jpg' %}">
+    </div>
+    <div class="full-width center-row-flex" style="margin-bottom: 2vh;">
+      <div data-aos="zoom-in" data-aos-duration="1000" class="subtitle">
+        Create an account!
+      </div>
+    </div>
+    <div class="full-width center-row-flex" style="margin-bottom: 2vh;">
+      <div class="err" id="err">{{ form.non_field_errors }}</div>
+    </div>
+    <div class="input-holder full-width center-row-flex">
+      <div class="column-start-flex">
+        <div class="input-name" id="email-caption">Email</div>
+        <!--<input type="text" id="email" name="email" placeholder="Email address" value="{% if email %}{{ email }}{% endif %}">-->
+        {{ form.email }}
+        <div class="err" id="email-err">{{ form.email.errors.as_text }}</div>
+      </div>
+    </div>
+    <div class="input-holder full-width center-row-flex">
+      <div class="column-start-flex">
+        <div class="input-name" id="fname-caption">First name</div>
+        <!--<input type="text" id="fname" name="fname" placeholder="First name">-->
+        {{ form.first_name }}
+        <div class="err" id="fname-err">{{ form.first_name.errors }}</div>
+      </div>
+    </div>
+    <div class="input-holder full-width center-row-flex">
+      <div class="column-start-flex">
+        <div class="input-name" id="lname-caption">Last name</div>
+        <!--<input type="text" id="lname" name="lname" placeholder="Last name">-->
+        {{ form.last_name }}
+        <div class="err" id="lname-err">{{ form.last_name.errors.as_text }}</div>
+      </div>
+    </div>
+    <div class="input-holder full-width center-row-flex">
+      <div class="column-start-flex">
+        <div class="input-name" id="fname-caption">Password</div>
+        <!--<input type="password" id="password" name="password" placeholder="Password">-->
+        {{ form.password1 }}
+        <div class="err" id="password-err">{{ form.password1.errors }}</div>
+      </div>
+    </div>
+    <!--<div class="input-holder full-width center-row-flex">
+      <div class="column-start-flex">
+        <div class="input-name" id="fname-caption">Password (confirm)</div>
+        {{ form.password2 }}
+        <div class="err" id="password-err">{{ form.password2.errors.as_text }}</div>
+      </div>
+    </div>-->
+    <div class="full-width center-row-flex">
+      <div class="signin-button" id="signupbtn" onclick="document.getElementById('form').submit()">Get started</div>
+    </div>
+  </form>
+</div>
+<script src="{% static 'main/signup.js' %}" charset="utf-8"></script>
+{% endblock %}

@@ -1,0 +1,344 @@
+{% extends "main/layout.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block title %}Falah | Edit{% endblock %}
+{% block main %}
+<style>
+#id_name, textarea {
+    width: 40vw;
+}
+</style>
+<div class="page-title">Edit program</div>
+{% if program.active %}
+<div class="start-row-flex margin_left margin_bottom">
+    <button class="destructive-btn signin-button" id="deactivatebtn" type="submit">Deactivate event</button>
+</div>
+{% else %}
+<div class="start-row-flex margin_left margin_bottom">
+    <button class="green-btn signin-button" id="activatebtn" type="submit">Reactivate event</button>
+</div>
+{% endif %}
+<form action="{% url 'edit' program.pk %}"method="POST" id="form">
+{% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field.errors }}
+        {{ hidden_field }}
+      {% endfor %}
+<div class="full-width center-row-flex" style="margin-bottom: 2vh;">
+    <div class="column-center-flex">
+      <div class="err" id="err">{{ form.non_field_errors }}</div>
+    </div>
+</div>
+<div class="full-width start-row-flex" style="margin-top: 5vh;">
+  <div class="side-img-holder center-row-flex">
+    <img class="side-img" src="{% static 'main/basic_info.svg' %}">
+  </div>
+  <div class="middlecontent-holder column-start-flex">
+    <div class="title">Basic information</div>
+    <div class="smaller subtitle" style="margin: 1.5vh 0;">Specify the basic information for your program. Name it and give it a proper description, tags, and categorize it.</div>
+
+    <div class="createform-holder column-start-flex">
+      <div class="input-row-holder start-row-flex">
+        <div class="input-holder column-start-flex">
+          <div class="input-name">Title of event</div>
+          <!--<input type="text" name="title" class="big-input" placeholder="Title">-->
+          {{ form.name }}
+          <div class="err" id="err">{{ form.name.errors.as_text }}</div>
+        </div>
+      </div>
+      <div class="input-row-holder start-row-flex">
+        <div class="input-holder column-start-flex">
+          <div class="input-name">Description</div>
+          <!--<textarea type="text" name="description" class="big-input" id="textarea" placeholder="Title"></textarea>-->
+          {{ form.description }}
+          <div class="err" id="err">{{ form.description.errors.as_text }}</div>
+        </div>
+      </div>
+      <div class="input-row-holder start-row-flex">
+        <div class="input-holder column-start-flex">
+          <div class="input-name">Max attendees</div>
+          <!--<textarea type="text" name="description" class="big-input" id="textarea" placeholder="Title"></textarea>-->
+          {{ form.max_attendees }}
+          <div class="err" id="err">{{ form.max_attendees.errors.as_text }}</div>
+        </div>
+      </div>
+      <div class="input-row-holder start-row-flex" style="width: 42vw;">
+        <div class="input-holder column-start-flex">
+          <!--<select name="type" class="small-select">
+            <option selected disabled>Type</option>
+            <option value="recurringClass">Recurring class</option>
+            <option value="onetimeClass">One time class</option>
+          </select>-->
+          {{ form.type }}
+          <div class="err" id="err">{{ form.type.errors.as_text }}</div>
+        </div>
+        <div class="input-holder column-start-flex">
+          <!--<select id="primary-option" name="subject" class="small-select" placeholder="Title">
+            <option selected disabled>Primary Subject</option>
+            <option value="math">Math</option>
+            <option value="english">English</option>
+            <option value="foreign_language">Foreign language</option>
+            <option value="science">Science</option>
+            <option value="social_science">Social science (ie history, economics)</option>
+            <option value="political">Political and law</option>
+            <option value="skills">Life skills</option>
+            <option value="other">Other</option>
+          </select>-->
+          {{ form.primary_subject }}
+          <div class="err" id="err">{{ form.primary_subject.errors.as_text }}</div>
+        </div>
+        <div class="input-holder column-start-flex">
+          <select id="secondary-option" required name="secondary_subject" class="small-select" placeholder="Title">
+            <option selected disabled>Secondary Subject</option>
+          </select>
+          <!--{{ form.secondary_subject }}-->
+          <div class="err" id="err">{{ form.secondary_subject.errors.as_text }}</div>
+        </div>
+      </div>
+      <div class="input-row-holder start-row-flex">
+        <div class="input-holder column-start-flex">
+          <div class="input-name">Tags</div>
+          <div class="input-row-holder start-row-flex" style="justify-content: space-between; width: 42vw;">
+            <input type="text" name="tag" id="taginput" class="medium-input" placeholder="Tag">
+            <input hidden type="text" name="tags" value=" " id="tagshiddeninput">
+            <div class="small-button" id="addbtn" style="margin-bottom: -1vh">Add</div>
+          </div>
+        </div>
+      </div>
+      <!--<input type="text" data-role="tagsinput" required class="form-control" name="tags" id="id_tags" onkeyup="event.preventDefault()">-->
+      
+      <div class="tags-grid start-row-flex" id="tags-grid">
+      </div>
+      <div class="err" id="err">{{ form.secondary_subject.errors.as_text }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Location -->
+<div class="full-width start-row-flex" style="margin-top: 8vh;">
+  <div class="side-img-holder center-row-flex">
+    <img class="side-img" src="{% static 'main/location.svg' %}">
+  </div>
+  <div class="middlecontent-holder column-start-flex">
+    <div class="title">Location</div>
+    <div class="smaller subtitle" style="margin: 1.5vh 0;">Choose which partner venue your program will be located at.</div>
+    <div class="createform-holder column-start-flex">
+      <div class="input-row-holder start-row-flex" style="width: 42vw;">
+        <div class="input-holder column-start-flex">
+          <select id="country" name="country" class="small-select">
+            <option selected disabled>Country</option>
+            <option value="usa">USA</option>
+            <option value="canada">Canada</option>
+          </select>
+        </div>
+        <div class="input-holder column-start-flex">
+          <select id="city" name="city" class="small-select">
+            <option selected disabled>City</option>
+          </select>
+        </div>
+        <div class="input-holder column-start-flex">
+          <select id="venue" type="text" name="venue" required class="small-select">
+            <option selected disabled>Venue</option>
+          </select>
+        </div>
+        <!--{{ form.venue }}-->
+      </div>
+      <div class="err" id="err">{{ form.venue.errors.as_text }}</div>
+      <div id="map">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Schedule -->
+<div class="full-width start-row-flex" style="margin-top: 8vh;">
+  <div class="side-img-holder center-row-flex">
+    <img class="side-img" src="{% static 'main/schedule.svg' %}">
+  </div>
+  <div class="middlecontent-holder column-start-flex">
+    <div class="title">Schedule</div>
+    <div class="smaller subtitle" style="margin: 1.5vh 0;">Choose when your program will take place.</div>
+    <div class="createform-holder column-start-flex" id="schedules_holder">
+    {% with i=0 %}
+    {% for session in sessions %}
+      <div class="input-row-holder start-row-flex" id="date-row">
+        <div class="input-holder column-start-flex">
+          <div class="input-name">From</div>
+          <div class='input-group date' id='datetimepicker{{ forloop.counter0|mul:2 }}'>
+            <input type='text' id="datetimepicker{{ forloop.counter0|mul:2 }}-input" name="date{{ forloop.counter0|mul:2 }}" class="form-control" value={{ session.start }} />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="input-holder column-start-flex">
+          <div class="input-name">To</div>
+          <div class='input-group date' id='datetimepicker{{ forloop.counter0|mul:2|add:1 }}'>
+            <input type='text' id="datetimepicker{{ forloop.counter0|mul:2|add:1 }}-input"name="date{{ forloop.counter0|mul:2|add:1 }}"  class="form-control" value={{ session.stop }}/>
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endwith %}
+      <div class="small-button" id="adddatebtn" style="margin-bottom: -1vh">Add another session</div>
+    </div>
+  </div>
+</div>
+<div class="full-width start-row-flex" style="margin-top: 8vh;">
+  <div class="side-img-holder center-row-flex">
+    <img class="side-img" src="{% static 'main/uploadImage.svg' %}">
+  </div>
+  <div class="middlecontent-holder column-start-flex">
+    <div class="title">Upload image</div>
+    <div class="smaller subtitle" style="margin: 1.5vh 0;">We recommend an image with a 2:1 horizontal aspect ratio.</div>
+    <div class="createform-holder column-start-flex" id="schedules_holder">
+      <div class="input-row-holder" style="flex-wrap: wrap;">
+        <input hidden name="mainFile" id="hiddenFile">
+        <input type="file" class="filepond fileupload" name="filepond" data-max-file-size="3MB" id="mainImageInput" checkValidity accept="image/png image/jpeg image/jpg">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="full-width start-row-flex" style="margin-top: 8vh;">
+  <div class="side-img-holder center-row-flex">
+    <img class="side-img" src="{% static 'main/done.svg' %}">
+  </div>
+  <div class="middlecontent-holder column-start-flex">
+    <div class="title">All Done!</div>
+    <div class="smaller subtitle" style="margin: 1.5vh 0;">Woo!</div>
+    <div class="createform-holder column-start-flex" id="schedules_holder">
+      <button class="signin-button" type="submit">Submit!</button>
+      <input type="hidden" id="submitbtn">
+    </div>
+  </div>
+</div>
+</form>
+<script src="{% static 'main/create.js' %}"></script>
+<script>
+/*const locs = {
+  "usa": {"coordinates": {lat: 41.850033, lng: -87.6500523}, "zoom": 4, "title": "USA"},
+  "nyc": {"coordinates": {lat: 40.7413203, lng: -73.9922277}, "zoom": 10, "title": "New York City"},
+  "dc": {"coordinates": {lat: 38.8953399, lng: -77.0517666}, "zoom": 12, "title:": "Washington D.C."},
+  "ciana": {"id": "ChIJn_7PE0dfwokR0wO5b0fYMrk", "coordinates": {lat: 40.7674376, lng: -73.9204642}, "zoom": 15,"title": "CIANA"},
+  "astoria_mosque": {"id":"ChIJVQc7Lk9fwokR5a7DIe8cunE","coordinates": {lat: 40.7721221, lng: -73.9265175}, "zoom": 15, "title": "Astoria Islamic Center"},
+}*/
+//const apiKey = "AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70"
+{% if program.active %}
+document.getElementById("deactivatebtn").onclick = function() {
+    if (confirm("You are going to deactivate this event.\n Continue?")) {
+        window.open("{% url 'deactivate' %}?program={{ program.pk }}", '_self',false)
+    }
+}
+{% else %}
+document.getElementById("activatebtn").onclick = function() {
+    if (confirm("You are going to reactivate this event.\n Continue?")) {
+        window.open("{% url 'activate' %}?program={{ program.pk }}", '_self',false)
+    }
+}
+{% endif %}
+var datetimePickerCounter = {{ sessions|length|mul:2|sub:1 }}
+var tags = {{ tags|safe }}
+for (tag in tags) {
+    addTag(tags[tag])
+}
+document.getElementById("country").onchange = function() {
+  option = document.getElementById("country").options[document.getElementById("country").selectedIndex].value
+  zoomToQuery(option);
+  switch (option) {
+    case "usa":
+      removeChildren(document.getElementById("city"));
+      city = document.createElement("option");
+      city.disabled = true;
+      city.selected = true;
+      city.innerHTML = "City";
+      document.getElementById("city").appendChild(city);
+      nyc = document.createElement("option");
+      nyc.value = "nyc";
+      nyc.innerHTML = "NYC";
+      document.getElementById("city").appendChild(nyc);
+      dc = document.createElement("option");
+      dc.value = "dc";
+      dc.innerHTML = "Washington DC";
+      document.getElementById("city").appendChild(dc);
+      break;
+  }
+}
+document.getElementById("city").onchange = function() {
+  option = document.getElementById("city").options[document.getElementById("city").selectedIndex].value
+  zoomToQuery(option)
+  switch (option) {
+    case "nyc":
+      removeChildren(document.getElementById("venue"));
+      venue = document.createElement("option");
+      venue.disabled = true;
+      venue.selected = true;
+      venue.innerHTML = "Venue";
+      document.getElementById("venue").appendChild(venue);
+      ciana = document.createElement("option");
+      ciana.value = "1";
+      ciana.innerHTML = "CIANA";
+      document.getElementById("venue").appendChild(ciana);
+      astoria_mosque = document.createElement("option");
+      astoria_mosque.value = "2";
+      astoria_mosque.innerHTML = "Astoria Islamic Center";
+      document.getElementById("venue").appendChild(astoria_mosque);
+      break;
+    case "dc":
+      removeChildren(document.getElementById("venue"));
+      venue = document.createElement("option");
+      venue.disabled = true;
+      venue.selected = true;
+      venue.innerHTML = "Venue";
+      document.getElementById("venue").appendChild(venue);
+      break;
+  }
+}
+document.getElementById("venue").onchange = function() {
+  option = document.getElementById("venue").options[document.getElementById("venue").selectedIndex].value
+  zoomToQuery(option)
+}
+</script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script>
+  FilePond.parse(document.body);
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<script>
+  FilePond.registerPlugin(
+  FilePondPluginImagePreview,
+  FilePondPluginImageExifOrientation,
+  FilePondPluginFileValidateSize,
+  FilePondPluginFileEncode,
+  FilePondPluginImageTransform
+);
+mainPond = FilePond.create(
+    document.getElementById('mainImageInput')
+);
+mainPond.acceptedFileTypes = ['image/png', 'image/jpg', 'image/jpeg']
+mainPond.onaddfile = (err, item) => {
+  if (err) {
+    console.warn(err);
+    return;
+  }
+  const base64String = item.getFileEncodeBase64String();
+  console.log(base64String)
+  document.getElementById("hiddenFile").value = base64String
+}
+document.getElementById("submitbtn").onclick = function() {
+  if (validateForm()) {
+    document.getElementById("form").submit()
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70&callback=initMap" async defer></script>
+{% endblock %}

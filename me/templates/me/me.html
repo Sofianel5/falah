@@ -1,0 +1,118 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block title %}Falah | Me{% endblock %}
+{% block main %}
+<div class="page-holder full-width column-start-flex">
+    <div class="full-width start-row-flex">
+        <div class="title margin_left">{{ me.first_name }} {{ me.last_name }}</div>
+    </div>
+    <div class="subtitle margin_top margin_bottom margin_left">Your interests</div>
+    <div class="tags-grid start-row-flex margin_bottom margin_left">
+        <div class="interest {% if "science" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="science">Science</div>
+        <div class="interest {% if "english" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="english">English</div>
+        <div class="interest {% if "math" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="math">Math</div>
+        <div class="interest {% if "social_science" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="social_science">Social science</div>
+        <div class="interest {% if "political" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="political">Political</div>
+        <div class="interest {% if "skills" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="skills">Skills</div>
+        <div class="interest {% if "foreign_language" in interests %}interest-on{% endif %}" onclick="toggleInterest(event)" data-value="foreign_language">Foreign language</div>
+    </div>
+    <div class="margin_top margin_left programs_holder column-start-flex">
+    <div class="subtitle margin_bottom">Programs you're registered for </div>
+    {% for program in active_programs %}
+      <div class="program_holder start-row-flex" id="{{ program.pk }}">
+        <div class="program start-row-flex" id="program:{{ program.pk }}">
+          <div class="program_img_holder column-center-flex">
+            <img class="program-img" src="{{ program.img.url }}">
+          </div>
+          <div id="program-info-holder" class="program-info-holder column-start-flex">
+            <div class="program-title">
+              <a class="invisible-link" href="{% url 'program'%}?id={{ program.pk }}">{{ program.name }}</a>
+            </div>
+            <div class="program-subtitle" style="color: grey">
+              {{ program.subtitle }}
+            </div>
+            <div class="program-description">
+              {{ program.description }}
+            </div>
+          </div>
+        </div>
+      </div>    
+      {% endfor %}
+      <div class="margin_top subtitle margin_bottom">Past programs</div>
+      {% for program in past_programs %}
+      <div class="program_holder start-row-flex" id="{{ program.pk }}">
+        <div class="program start-row-flex" id="program:{{ program.pk }}">
+          <div class="program_img_holder column-center-flex">
+            <img class="program-img" src="{{ program.img.url }}">
+          </div>
+          <div id="program-info-holder" class="program-info-holder column-start-flex">
+            <div class="program-title">
+              <a class="invisible-link" href="{% url 'program'%}?id={{ program.pk }}">{{ program.name }}</a>
+            </div>
+            <div class="program-subtitle" style="color: grey">
+              {{ program.subtitle }}
+            </div>
+            <div class="program-description">
+              {{ program.description }}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="margin_top subtitle margin_bottom">My programs</div>
+      {% for program in my_programs %}
+      <div class="program_holder start-row-flex" id="{{ program.pk }}">
+        <div class="program start-row-flex" id="program:{{ program.pk }}">
+          <div class="program_img_holder column-center-flex">
+            <img class="program-img" src="{{ program.img.url }}">
+          </div>
+          <div id="program-info-holder" class="program-info-holder column-start-flex">
+            <div class="program-title">
+              <a class="invisible-link" href="{% url 'program'%}?id={{ program.pk }}">{{ program.name }}</a>
+            </div>
+            <div class="program-subtitle" style="color: grey">
+              {{ program.subtitle }}
+            </div>
+            <div class="program-description">
+              {{ program.description }}
+            </div>
+            <div class="start-row-flex">
+                <a class="hidden-link" style="text-decoration: underline;" href="{% url 'edit' program.pk %}">Edit</a>
+                {% if program.active %}
+                <a class="destructive hidden-link margin_left" href="{% url 'deactivate' %}?program={{ program.pk }}" style="text-decoration: underline;">Deactivate</a>
+                {% else %}
+                <a class="green hidden-link margin_left" href="{% url 'activate' %}?program={{ program.pk }}" style="text-decoration: underline;">Activate</a>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+<script>
+function toggleInterest(e) {
+    if (!e.target.classList.contains("interest-on")) {
+        console.log("called to add interest")
+        interest = e.target.dataset.value 
+        var request = new XMLHttpRequest()
+        request.open("GET","{% url 'addInterest' %}?subject="+interest)
+        params = "subject="+interest
+        request.onload = function() {
+            e.target.classList.add("interest-on")
+        }
+    request.send()
+    } 
+    else {
+        console.log("called to remove interest")
+        interest = e.target.dataset.value 
+        var request = new XMLHttpRequest()
+        request.open("GET","{% url 'removeInterest' %}?subject="+interest)
+        request.onload = function() {
+            e.target.classList.remove("interest-on")
+        }
+        request.send()
+    }
+}
+</script>
+{% endblock%}

@@ -1,0 +1,69 @@
+{% extends "main/layout.html" %}
+{% load static %}
+{% block title %}Falah{% endblock %}
+{% block main %}
+<div class="full-width start-row-flex">
+  <div class="splash-image-holder">
+    <img class="splash-image" src="{% static "main/falah-splash.jpg"%}">
+  </div>
+  <div class="splash-info-holder column-start-flex" data-aos="fade-right">
+    <div class="page-title" data-aos-duration="9000">
+      Bring success to your community
+    </div>
+    <div class="splash-paragraph" data-aos="fade-right" data-aos-duration="1000">
+      Falah helps communities create success by making the exchange of ideas, skills, and knowlege as easy as it can be. Help bring success to your community by creating a program where you can share your unique skills and experience with other people. Or sign up for one of a diverse number of programs offered by local businesses and community members.
+    </div>
+    <div class="splash-buttons-holder start-row-flex">
+      <div class="splash-button">
+        <a href="{% url 'browse' %}" class="hidden-link">
+          Find a program
+        </a>
+      </div>
+      <div class="splash-button">
+        <a href="{% url 'create-program' %}" class="hidden-link">
+          Start a program
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="full-width column-start-flex">
+  <div class="page-title" data-aos="fade-right" data-aos-duration="9000" style="margin-top: 4vh; margin-left: 4vw">How it works</div>
+  <div class="full-width start-row-flex">
+    <div class="column-start-flex">
+      <div class="subtitle" style="margin-top: 4vh; margin-left: 4vw;">Step 1: Someone (or you) creates a program</div>
+      <div class="splash-paragraph" data-aos="fade-right" data-aos-duration="1000">
+        A community member makes a Falah account and creates a program, specifing the topic, their expirience, what partner venue it will be hosted at, and more details. While waiting for approval, the creator prepares to teach by planning out lessions and anything they might need to help better empart their knowlege.
+      </div>
+    </div>
+    <img src="{% static "main/create.svg"%}" data-aos="zoom-in-left" class="info-drawing">
+  </div>
+  <div class="full-width start-row-flex">
+    <img src="{% static "main/register.svg"%}" data-aos="zoom-in-right" class="info-drawing">
+    <div class="column-start-flex">
+      <div class="subtitle" style="margin-top: 4vh; margin-left: 4vw;">Step 2: People sign up for the program</div>
+      <div class="splash-paragraph" data-aos="fade-left" data-aos-duration="1000">
+        Members of the community sign up or sign their children up to grow their knowlege or skills in a particular way.
+      </div>
+    </div>
+  </div>
+  <div class="full-width start-row-flex">
+    <div class="column-start-flex">
+      <div class="subtitle" style="margin-top: 4vh; margin-left: 4vw;">Step 3: The program</div>
+      <div class="splash-paragraph" data-aos="fade-right" data-aos-duration="1000">
+        The creator of the program and attendees meet for the scheduled class(es) and the attendees gain new skills or learn new things.
+      </div>
+    </div>
+    <img src="{% static "main/teaching.svg"%}" data-aos="zoom-in-left" class="info-drawing">
+  </div>
+  <div class="full-width start-row-flex">
+    <img src="{% static "main/finished.svg"%}" data-aos="zoom-in-right" class="info-drawing">
+    <div class="column-start-flex">
+      <div class="subtitle" style="margin-top: 4vh; margin-left: 4vw;">Step 4: Aftermath</div>
+      <div class="splash-paragraph" data-aos="fade-left" data-aos-duration="1000">
+        After the program is completed, attendees will rate their expirience. If the ratings are good, the creator of the program is eligible for a certificate of community service.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

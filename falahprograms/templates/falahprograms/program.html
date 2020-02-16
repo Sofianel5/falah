@@ -1,0 +1,79 @@
+{% extends "main/layout.html" %}
+{% load static %}
+{% block title %}
+Falah | {{ program.name }}
+{% endblock %}
+{% block main %}
+<div class="full-width start-row-flex">
+  <div class="titleimg-holder">
+    <img class="titleimg" src="{{ program.img.url }}">
+  </div>
+  <div class="titleinfo-holder column-start-flex">
+    <div class="title" style="margin-left: 2vw; margin-top: 3vh;">{{ program.name }}</div>
+    <div class="subtitle" style="margin-left: 2vw; margin-top: 1.5vh;">Created by {{ program.creator.first_name }} {{ program.creator.last_name}}</div>
+  </div>
+</div>
+<div class="registerrow full-width end-row-flex">
+  <div class="column-center-flex" style="height: 100%">
+    <div class="sharebtn"><img src="{% static 'main/share.svg' %}" class="shareicon" alt="share"></div>
+  </div>
+  <div class="column-center-flex" style="height: 100%">
+  {% if program.max_attendees >= program.attendees|length %}
+    <div class="registerbtn"><a class="hidden-link" href="{% url 'register' %}?program={{ program.pk }}">Register</a></div> 
+  {% else %}
+    <div class="overbooked registerbtn">Overbooked</div>  
+  {% endif %}
+  </div>
+</div>
+<div class="justify start-row-flex">
+  <div class="info-column column-start-flex">
+    <div class="small-subtitle" style="margin-bottom: 1vh;">Description</div>
+    <div class="description-p">
+      {{ program.description }}
+    </div>
+  </div>
+  <div class="info-column column-start-flex">
+    <div class="small-subtitle" style="margin-bottom: 1vh;">Sessions</div>
+    {% for session in sessions %}
+    <div class="description-p" style="margin-bottom: 1vh">
+      {{ session }}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="small-subtitle" style="margin: 1vh 3vw;">Location: {{ program.venue }}</div>
+<div id="map" style="margin: 2vh 3vw">
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70&callback=initMap" async defer></script>
+<script>
+  var map;
+  function initMap() {
+    var center = {{ program.venue.coordinates | safe }};
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15,
+      center: center
+    });
+
+    var centerMarker = new google.maps.Marker({
+      position: center,
+      map: map,
+      title: '{{ program.venue }}',
+      optimized: false
+    });
+    google.maps.event.addListener(usaMarker , 'click', function(){
+        var infowindow = new google.maps.InfoWindow({
+          content:'{{ program.venue }}',
+          position: center,
+        });
+        infowindow.open(map);
+    });
+  }
+  function bindInfoWindow(marker, map, infowindow, html) {
+      marker.addListener('click', function() {
+          infowindow.setContent(html);
+          infowindow.open(map, this);
+      });
+  }
+</script>
+{% endblock %}

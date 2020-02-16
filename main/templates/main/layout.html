@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- tags for creating tab icon -->
+
+        <!-- Load in css -->
+        <link href="{% static "main/styles.css" %}" rel="stylesheet"/>
+        <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+        <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500&display=swap" rel="stylesheet">
+        <!-- TODO: Optimize for search engines -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header id="header" class="center-row-flex">
+          <div class="logo-holder start-row-flex">
+            <a href="/" style="height: 100%" class="column-center-flex">
+              <img src="{% static "main/logo.jpeg" %}" class="logo">
+            </a>
+          </div>
+          <div class="nav-items-holder center-row-flex">
+            {% if user.is_authenticated %}
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'browse'%}" class="nav-item">Browse programs</a>
+            </div>
+            <!-- TODO: Once sign in is finished, make this link to sign in page if the person isnt signed in -->
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'create-program' %}" class="nav-item">Create a program</a>
+            </div>
+            <div class="nav-item-holder column-center-flex">
+              <a href="/me" class="nav-item">Me</a>
+            </div>
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'signout' %}" class="nav-item">Sign Out</a>
+            </div>
+            {% else %}
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'browse' %}" class="nav-item">Browse programs</a>
+            </div>
+            <!-- TODO: Once sign in is finished, make this link to sign in page if the person isnt signed in -->
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'create-program' %}" class="nav-item">Create a program</a>
+            </div>
+            <div class="nav-item-holder column-center-flex">
+              <a href="{% url 'signin' %}" class="nav-item">Get started</a>
+            </div>
+            {% endif %}
+          </div>
+        </header>
+        <div class="body-root">
+          <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+          <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+          <script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+          <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+          <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+          <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+          <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js"></script>
+        {% block main %}
+        {% endblock %}
+        </div>
+    </body>
+    <script>
+      AOS.init();
+    </script>
+</html>

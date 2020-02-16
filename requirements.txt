@@ -1,0 +1,12 @@
+django
+django-drf-filepond
+uuid
+django-mathfilters
+pycrypto
+djangorestframework
+djoser
+Pillow
+django-imagekit
+geoip2
+redis 
+celery
