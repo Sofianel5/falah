@@ -10,3 +10,5 @@ django-imagekit
 geoip2
 redis 
 celery
+django-celery-email
+geopy

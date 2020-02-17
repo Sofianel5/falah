@@ -35,6 +35,7 @@ urlpatterns = [
     path("create/", program_views.create, name="create-program"),
     path("browse/", program_views.browse, name="browse"),
     path("program/", program_views.program, name="program"),
+    path("mycity/", program_views.get_city, name="getcity"),
     path("register/", program_views.register, name="register"),
     path("me/", include("me.urls")),
     path("api/", include("api.urls")),

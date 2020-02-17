@@ -14,7 +14,7 @@ class Country(models.Model):
     coordinates = models.ForeignKey(Coordinates, verbose_name="Coordinates", on_delete=models.CASCADE)
     country_code = models.CharField(max_length=10)
     country_name = models.CharField(max_length=50)
-    img = ProcessedImageField(upload_to='cities', default="city.jpg", processors=[ResizeToFill(1000, 500)], format='JPEG', options={'quality': 60})
+    img = ProcessedImageField(upload_to='countries', default="country.jpg", processors=[ResizeToFill(1000, 500)], format='JPEG', options={'quality': 60})
 
 
 class City(models.Model):

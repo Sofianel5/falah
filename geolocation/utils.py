@@ -1,6 +1,9 @@
 from django.contrib.gis.geoip2 import GeoIP2
-from falahprograms.models import City, Coordinates, Venue
+from falahprograms.models import City, Coordinates, Venue, Country
 import math  
+from geopy.geocoders import Nominatim
+
+geolocator = Nominatim(user_agent="falah")
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -11,22 +14,24 @@ def get_client_ip(request):
     return ip
 
 def getCityFromRequest(request):
-    try:
-        user = request.user
-        ip = get_client_ip(request)
-        g = GeoIP2()
-        city = g.city(ip)
-        print(city)
-        if city is not None:
+    user = request.user
+    ip = get_client_ip(request)
+    g = GeoIP2()
+    city = g.city(ip)
+    if city is not None:
+        try:
+            _usercity = City.objects.get(name=city["city"])
+        except City.DoesNotExist:
+            _country = g.country(ip)
             try:
-                _usercity = City.objects.get(name=city)
-            except City.DoesNotExist:
-                _country = g.country(ip)
-                _usercity = City.objects.create(name=city, verbose_name=city, country_name=_country["country_name"], country_code=_country["country_code"])
-
-    except Exception as e:
-        print(e)
-        return
+                _country = Country.objects.get(country_code=_country["country_code"])
+            except Country.DoesNotExist:
+                loc = geolocator.geocode(_country["country_name"])
+                _country_coords = Coordinates.objects.create(lat=loc.latitude, lng=loc.longitude)
+                _country = Country.objects.create(coordinates=_country_coords, country_name=_country["country_name"], country_code=_country["country_code"])
+            city_coords = Coordinates.objects.create(lat=city["latitude"], lng=city["longitude"])
+            _usercity = City.objects.create(name=city["city"], verbose_name=city["city"], country=_country, coordinates=city_coords)
+    return _usercity
 
 def distanceInMetersFromCoordinates(lat1, lat2, lng1, lng2):
     lat1 = lat1 * math.pi / 180

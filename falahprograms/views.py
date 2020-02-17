@@ -5,11 +5,12 @@ from .forms import CreateProgramForm
 from .utils import verifyImage, getSubtitle
 from .models import Session, City, Program, Venue
 import uuid
-import os 
+import os
 from datetime import datetime
 from geolocation.utils import getCityFromRequest
-import base64 
+import base64
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 DEFAULT_CITY_NAME = "New York"
 
@@ -53,6 +54,10 @@ def create(request):
             return redirect("me")
     return render(request, "falahprograms/create.html", context)
 
+def get_city(request):
+   city = getCityFromRequest(request)
+   return HttpResponse(city)
+
 def browse(request):
     context = {}
     if request.method == "GET":
@@ -62,16 +67,19 @@ def browse(request):
                 context["city"] = City.objects.get(name=request.GET["city"])
             except City.DoesNotExist:
                 try:
-                    context["city"] = City.objects.get(name=getCityFromRequest(request))
+                    context["city"] = getCityFromRequest(request)
                 except:
                     context["city"] = City.objects.get(name=DEFAULT_CITY_NAME)
         else:
             try:
-                context["city"] = City.objects.get(name=getCityFromRequest(request))
+                context["city"] = getCityFromRequest(request)
             except:
                 context["city"] = City.objects.get(name=DEFAULT_CITY_NAME)
-        request.user.city = context["city"]
-        request.user.save()
+        try:
+            request.user.city = context["city"]
+            request.user.save()
+        except:
+            pass
         context["coordinates"] = serializers.serialize('json', [context["city"].coordinates])
         venues = Venue.objects.filter(city=context["city"])
         context["venues"] = {}
