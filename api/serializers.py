@@ -1,5 +1,5 @@
 from users.models import Account 
-from falahprograms.models import Program, Venue, City, Coordinates
+from falahprograms.models import *
 from rest_framework import serializers
 from djoser.serializers import UserCreateSerializer as BaseUserRegistrationSerializer
 
@@ -12,6 +12,11 @@ class CoordinatesSerializer(serializers.ModelSerializer):
         model = Coordinates
         fields = "__all__"
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country 
+        fields = "__all__"
+        
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City

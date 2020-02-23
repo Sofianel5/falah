@@ -29,12 +29,21 @@ function initMap() {
       infowindow.open(map);
   });
 }
+function getGoogleApiKey() {
+  var request = XMLHttpRequest()
+  request.open("GET", "/get-google-api-key/")
+  request.onload = function () {
+    apiKey = JSON.parse(request.responseText)["key"]
+  }
+  request.send()
+}
 function bindInfoWindow(marker, map, infowindow, html) {
     marker.addListener('click', function() {
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
 }
+//This function takes: coordinates, zoom level, children containing coordinates and names 
 function zoomToQuery(query) {
   map.setCenter(locs[query]["coordinates"])
   map.setZoom(locs[query]["zoom"])
@@ -68,6 +77,7 @@ const locs = {
   "astoria_mosque": {"id":"ChIJVQc7Lk9fwokR5a7DIe8cunE","coordinates": {lat: 40.7721221, lng: -73.9265175}, "zoom": 15, "title": "Astoria Islamic Center"},
 }
 const apiKey = "AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70"
+getGoogleApiKey()
 document.getElementById("country").onchange = function() {
   option = document.getElementById("country").options[document.getElementById("country").selectedIndex].value
   zoomToQuery(option);

@@ -14,20 +14,6 @@ function initMap() {
     zoom: 1,
     center: center
   });
-
-  var usaMarker = new google.maps.Marker({
-    position: new google.maps.LatLng(41.850033, -87.6500523),
-    map: map,
-    title: 'US',
-    optimized: false
-  });
-  google.maps.event.addListener(usaMarker , 'click', function(){
-      var infowindow = new google.maps.InfoWindow({
-        content:'USA',
-        position: new google.maps.LatLng(41.850033, -87.6500523),
-      });
-      infowindow.open(map);
-  });
 }
 function bindInfoWindow(marker, map, infowindow, html) {
     marker.addListener('click', function() {
@@ -35,9 +21,11 @@ function bindInfoWindow(marker, map, infowindow, html) {
         infowindow.open(map, this);
     });
 }
+
 function zoomToQuery(query) {
   map.setCenter(locs[query]["coordinates"])
   map.setZoom(locs[query]["zoom"])
+  //disgusting code please abstract out
   if (children["ciana"] != undefined) {
     for (var i = 0; i < children[query].length; i++) {
       child = children[query][i]
@@ -55,7 +43,7 @@ function removeChildren(node) {
     node.removeChild(node.firstChild);
   }
 }
-// TODO: Have this dynamically generated in a <script> tag using jinja2 templating
+// TODO: get rid of this
 const children = {
   "usa": ["nyc", "dc"],
   "nyc": ["astoria_mosque", "ciana"]
@@ -67,6 +55,7 @@ const locs = {
   "ciana": {"id": "ChIJn_7PE0dfwokR0wO5b0fYMrk", "coordinates": {lat: 40.7674376, lng: -73.9204642}, "zoom": 15,"title": "CIANA"},
   "astoria_mosque": {"id":"ChIJVQc7Lk9fwokR5a7DIe8cunE","coordinates": {lat: 40.7721221, lng: -73.9265175}, "zoom": 15, "title": "Astoria Islamic Center"},
 }
+// GET FROM API!!
 const apiKey = "AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70"
 document.getElementById("country").onchange = function() {
   option = document.getElementById("country").options[document.getElementById("country").selectedIndex].value
@@ -400,8 +389,8 @@ String.prototype.hashCode = function() {
   return hash;
 };
 $(function () {
-               $('#datetimepicker0').datetimepicker();
-                $('#datetimepicker1').datetimepicker();
+  $('#datetimepicker0').datetimepicker();
+  $('#datetimepicker1').datetimepicker();
 });
 //var datetimePickerCounter = 1
 document.getElementById('adddatebtn').onclick = function() {

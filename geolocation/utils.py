@@ -1,6 +1,7 @@
 from django.contrib.gis.geoip2 import GeoIP2
 from falahprograms.models import City, Coordinates, Venue, Country
 import math  
+from django.core.exceptions import PermissionDenied
 from geopy.geocoders import Nominatim
 
 geolocator = Nominatim(user_agent="falah")
@@ -27,6 +28,8 @@ def getCityFromRequest(request):
                 _country = Country.objects.get(country_code=_country["country_code"])
             except Country.DoesNotExist:
                 loc = geolocator.geocode(_country["country_name"])
+                if _country["country_name"] == "Israel":
+                    raise PermissionDenied
                 _country_coords = Coordinates.objects.create(lat=loc.latitude, lng=loc.longitude)
                 _country = Country.objects.create(coordinates=_country_coords, country_name=_country["country_name"], country_code=_country["country_code"])
             city_coords = Coordinates.objects.create(lat=city["latitude"], lng=city["longitude"])

@@ -199,3 +199,5 @@ EMAIL_HOST_PASSWORD = "-*LB@c+-EV(`@TCTgg(Vnudw4=(ZC#"
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
+GOOGLE_API_KEY = "AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70"

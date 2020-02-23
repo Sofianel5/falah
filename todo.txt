@@ -29,3 +29,7 @@ whitelist our domain for loggining into accounts@falah.world in gsuite
 add a third color for color scheme
 start using sass 
 translation
+enable people to create venues
+get the logo legally and create the icon for tabs
+splash screen for app
+api calls for getting venues/cities 

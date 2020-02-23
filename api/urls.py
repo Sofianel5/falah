@@ -7,5 +7,5 @@ urlpatterns = [
     path("auth/", include('djoser.urls')),
     path("auth/", include("djoser.urls.authtoken")),
     path("getprograms/", views.ProgramsView.as_view(), name="get-programs-api"),
-
+    path("get-google-api-key/", views.getGoogleApiKey, name="get-google-api-key"),
 ]

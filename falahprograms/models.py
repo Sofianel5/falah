@@ -15,7 +15,8 @@ class Country(models.Model):
     country_code = models.CharField(max_length=10)
     country_name = models.CharField(max_length=50)
     img = ProcessedImageField(upload_to='countries', default="country.jpg", processors=[ResizeToFill(1000, 500)], format='JPEG', options={'quality': 60})
-
+    def __str__(self):
+        return self.country_name
 
 class City(models.Model):
     name = models.CharField(verbose_name="City name", max_length=50)
