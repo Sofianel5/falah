@@ -15,17 +15,33 @@ function initMap() {
     center: center
   });
 }
+function getGoogleApiKey() {
+  var request = XMLHttpRequest()
+  request.open("GET", "/get-google-api-key/")
+  request.onload = function () {
+    apiKey = JSON.parse(request.responseText)["key"]
+  }
+  request.send()
+}
 function bindInfoWindow(marker, map, infowindow, html) {
     marker.addListener('click', function() {
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
 }
-
+countries = []
+function getCountries() {
+  var request = XMLHttpRequest()
+  request.open("GET", "/get-countries/", false)
+  request.onload = function () {
+    countries = JSON.parse(request.responseText)
+  }
+  request.send()
+}
+//This function takes: coordinates, zoom level, children containing coordinates and names 
 function zoomToQuery(query) {
   map.setCenter(locs[query]["coordinates"])
   map.setZoom(locs[query]["zoom"])
-  //disgusting code please abstract out
   if (children["ciana"] != undefined) {
     for (var i = 0; i < children[query].length; i++) {
       child = children[query][i]
@@ -38,12 +54,105 @@ function zoomToQuery(query) {
     }
   }
 }
+cities = []
+function getCities(country) {
+  var request = XMLHttpRequest()
+  request.open("GET", "/get-cities/?country="+country, false)
+  request.onload = function () {
+    cities = JSON.parse(request.responseText)
+  }
+  request.send()
+}
+venues = []
+function getVenues(city) {
+  var request = XMLHttpRequest()
+  request.open("GET", "/get-venues/?city="+city, false)
+  request.onload = function () {
+    cities = JSON.parse(request.responseText)
+  }
+  request.send()
+}
+function parseCoordinates(object) {
+  return {lat: object["coordinates"]["latitude"], lng: object["coordinates"]["longitude"]}
+}
+function getCountry(country) {
+  for (element in countries) {
+    if (countries[element]["name"] == country) {
+      return countries[element]
+    }
+  }
+}
+function zoomToCountry(country) {
+  country = getCountry(country)
+  coordinates = parseCoordinates(country)
+  zoom = 4
+  map.setCenter(coordinates)
+  map.setZoom(zoom)
+  getCities(country["name"])
+  for (var i = 0; i < cities.length; i++) {
+    city = cities[i]
+    var marker = new google.maps.Marker({
+      position: city["coordinates"],
+      map: map,
+      title: city["name"],
+    });
+    bindInfoWindow(marker, map, new google.maps.InfoWindow(), city["name"])
+  }
+}
+function getCity(city) {
+  for (element in cities) {
+    if (cities[element]["name"] == city) {
+      return cities[element]
+    }
+  }
+}
+function zoomToCity(city) {
+  city = getCity(city)
+  coordinates = parseCoordinates(city)
+  zoom = 4
+  map.setCenter(coordinates)
+  map.setZoom(zoom)
+  getVenues(city["name"])
+  for (var i = 0; i < venues.length; i++) {
+    venues = venues[i]
+    var marker = new google.maps.Marker({
+      position: venue["coordinates"],
+      map: map,
+      title: venue["name"],
+    });
+    bindInfoWindow(marker, map, new google.maps.InfoWindow(), venue["name"])
+  }
+}
+function getVenue(venue) {
+  for (element in venues) {
+    if (venues[element]["name"] == venues) {
+      return venues[element]
+    }
+  }
+}
+function zoomToVenue(venue) {
+  city = getCity(city)
+  coordinates = parseCoordinates(city)
+  zoom = 4
+  map.setCenter(coordinates)
+  map.setZoom(zoom)
+  getVenues(city["name"])
+  for (var i = 0; i < venues.length; i++) {
+    venues = venues[i]
+    var marker = new google.maps.Marker({
+      position: venue["coordinates"],
+      map: map,
+      title: venue["name"],
+    });
+    bindInfoWindow(marker, map, new google.maps.InfoWindow(), venue["name"])
+  }
+}
 function removeChildren(node) {
   while (node.firstChild) {
     node.removeChild(node.firstChild);
   }
 }
-// TODO: get rid of this
+// TODO: Have this dynamically generated in a <script> tag using jinja2 templating
 const children = {
   "usa": ["nyc", "dc"],
   "nyc": ["astoria_mosque", "ciana"]
@@ -55,8 +164,8 @@ const locs = {
   "ciana": {"id": "ChIJn_7PE0dfwokR0wO5b0fYMrk", "coordinates": {lat: 40.7674376, lng: -73.9204642}, "zoom": 15,"title": "CIANA"},
   "astoria_mosque": {"id":"ChIJVQc7Lk9fwokR5a7DIe8cunE","coordinates": {lat: 40.7721221, lng: -73.9265175}, "zoom": 15, "title": "Astoria Islamic Center"},
 }
-// GET FROM API!!
-const apiKey = "AIzaSyCRredUc1zqTYJAGpWwNF0nBiqBI7Hus70"
+const apiKey = ""
+getGoogleApiKey()
 document.getElementById("country").onchange = function() {
   option = document.getElementById("country").options[document.getElementById("country").selectedIndex].value
   zoomToQuery(option);
@@ -389,8 +498,8 @@ String.prototype.hashCode = function() {
   return hash;
 };
 $(function () {
-  $('#datetimepicker0').datetimepicker();
-  $('#datetimepicker1').datetimepicker();
+               $('#datetimepicker0').datetimepicker();
+                $('#datetimepicker1').datetimepicker();
 });
 //var datetimePickerCounter = 1
 document.getElementById('adddatebtn').onclick = function() {
